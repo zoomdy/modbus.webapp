@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Modbus</title>
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.min.css">
+
+<script src="js/jquery-1.12.3.min.js"></script>
+<script src="js/jquery.mobile-1.4.5.min.js"></script>
+
+<script type="text/javascript">
+	var xmlhttp;
+	function loadXMLDoc(url) {
+		xmlhttp = new XMLHttpRequest();
+
+		if (xmlhttp != null) {
+			xmlhttp.onreadystatechange = stateChange;
+			xmlhttp.open("GET", url, true);
+			xmlhttp.send(null);
+		} else {
+			alert("Your browser does not support XMLHTTP.");
+		}
+	}
+
+	function stateChange() {
+		if (xmlhttp.readyState == 4) {// 4 = "loaded"
+			if (xmlhttp.status == 200) {// 200 = "OK"
+				var hexResponse = xmlhttp.responseText;
+				var response = ''
+				for (i = 0; i < hexResponse.length - 1; i += 2) {
+					var charValue = String.fromCharCode('0x'
+							+ hexResponse.substring(i, i + 2))
+					response += charValue;
+				}
+				document.getElementById('receivedTextarea').value = response;
+			} else {
+				alert("Problem retrieving XML data:" + xmlhttp.statusText);
+			}
+		}
+	}
+
+	function send() {
+		var request = document.getElementById('sendTextarea').value;
+		var baudrate = document.getElementById('select-choice-baudrate').value;
+		var hexRequest = ''
+		for (i = 0; i < request.length; i++) {
+			var charCode = request.charCodeAt(i);
+			var hexCode = charCode.toString(16);
+			if (hexCode.length % 2 != 0) {
+				hexCode = '0' + hexCode;
+			}
+			hexRequest = hexRequest + hexCode;
+		}
+		var url = '/cgi-bin/web-serial?request=' + hexRequest + '&baudrate='
+				+ baudrate;
+		loadXMLDoc(url);
+	}
+
+	var running = 0;
+	function start() {
+		if (running == 0) {
+			document.getElementById("button-start").innerHTML = "停止";
+			running = 1;
+		} else {
+			document.getElementById("button-start").innerHTML = "开始";
+			running = 0;
+		}
+
+	}
+</script>
+<body>
+
+	<div data-role="page" id="page-web-modbus">
+		<div data-role="header" data-theme="b">
+			<h1>Web Modbus</h1>
+		</div>
+		<div class="ui-content">
+			<label for="select-choice-baudrate" class="select">波特率：</label>
+			<select name="select-choice-baudrate" id="select-choice-baudrate" data-native-menu="false">
+				<option>波特率</option>
+				<option value="1200">1200</option>
+				<option value="2400">2400</option>
+				<option value="4800">4800</option>
+				<option value="9600" selected="selected">9600</option>
+				<option value="19200">19200</option>
+				<option value="38400">38400</option>
+				<option value="57600">57600</option>
+				<option value="115200">115200</option>
+			</select>
+
+			<label for="device-address">设备地址：</label>
+			<input name="number" pattern="[0-9]*" min="0" max="247" placeholder="设备地址(0~247)" id="device-address" value="" type="number"></input>
+
+			<label for="select-choice-function-code" class="select">功能码：</label>
+			<select name="select-choice-function-code" id="select-choice-function-code" data-native-menu="false">
+				<option>功能码</option>
+				<option value="3">Read Holding Registers(0x03)</option>
+				<option value="4" selected="selected">Read Input Registers(0x04)</option>
+			</select>
+
+			<label for="register-address">寄存器起始地址：</label>
+			<input name="number" pattern="[0-9]*" min="0" max="65535" placeholder="寄存器起始地址(0~65535)" id="register-address" value="" type="number"></input>
+
+			<label for="register-quantity">寄存器数目：</label>
+			<input name="number" pattern="[0-9]*" min="1" max="125" placeholder="寄存器数目(1~128)" id="register-quantity" value="" type="number"></input>
+			
+			<a href="#page-traffic" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-arrow-r">开始</a>
+		</div>
+	</div>
+</body>
+
+</head>
+</html>
