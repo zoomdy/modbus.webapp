@@ -6,6 +6,7 @@
 <title>Web Modbus</title>
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="web-modbus.css">
 
 <script src="js/jquery-1.12.3.min.js"></script>
 <script src="js/jquery.mobile-1.4.5.min.js"></script>
@@ -73,23 +74,11 @@
 <body>
 
 	<div data-role="page" id="page-web-modbus">
-		<div data-role="header" data-theme="b">
+		<div data-role="header">
+			<a href="#page-setting" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-gear">Setting</a>
 			<h1>Web Modbus</h1>
 		</div>
 		<div class="ui-content">
-			<label for="select-choice-baudrate" class="select">波特率：</label>
-			<select name="select-choice-baudrate" id="select-choice-baudrate" data-native-menu="false">
-				<option>波特率</option>
-				<option value="1200">1200</option>
-				<option value="2400">2400</option>
-				<option value="4800">4800</option>
-				<option value="9600" selected="selected">9600</option>
-				<option value="19200">19200</option>
-				<option value="38400">38400</option>
-				<option value="57600">57600</option>
-				<option value="115200">115200</option>
-			</select>
-
 			<label for="device-address">设备地址：</label>
 			<input name="number" pattern="[0-9]*" min="0" max="247" placeholder="设备地址(0~247)" id="device-address" value="" type="number"></input>
 
@@ -105,8 +94,90 @@
 
 			<label for="register-quantity">寄存器数目：</label>
 			<input name="number" pattern="[0-9]*" min="1" max="125" placeholder="寄存器数目(1~128)" id="register-quantity" value="" type="number"></input>
-			
-			<a href="#page-traffic" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-arrow-r">开始</a>
+
+			<a onclick="window.location.assign('#page-traffic');" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-arrow-r">开始</a>
+		</div>
+	</div>
+
+	<div data-role="page" id="page-traffic">
+		<div data-role="header" data-position="fixed">
+			<a href="#page-web-modbus" data-rel="back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
+			<h1>Modbus Traffic</h1>
+		</div>
+		<!-- /header -->
+		<div class="ui-content">
+			<ul data-role="listview" data-inset="true">
+				<li>
+					<p>
+						<strong>Read Input Registers 6 ~ 7 Success</strong>
+					</p>
+					<p>
+						-&gt;<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-addr">0006</span><span class="mb-reg-quantity">0002</span><span class="mb-crc">FE</span>
+					</p>
+					<p>
+						&lt;-<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-quantity">02</span><span class="mb-data">0356FE12</span><span class="mb-crc">FE</span>
+					</p>
+				</li>
+				<li data-theme="b">
+					<p>
+						<strong>Read Input Registers 6 ~ 7 Error</strong>
+					</p>
+					<p>
+						-&gt;<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-addr">0006</span><span class="mb-reg-quantity">0002</span><span class="mb-crc">FE</span>
+					</p>
+					<p>
+						&lt;-<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-quantity">02</span><span class="mb-data">0356FE12</span><span class="mb-crc">FE</span>
+					</p>
+				</li>
+
+				<li>
+					<p>
+						<strong>Read Input Registers 6 ~ 7 Success</strong>
+					</p>
+					<p>
+						-&gt;<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-addr">0006</span><span class="mb-reg-quantity">0002</span><span class="mb-crc">FE</span>
+					</p>
+					<p>
+						&lt;-<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-quantity">02</span><span class="mb-data">0356FE12</span><span class="mb-crc">FE</span>
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Read Input Registers 6 ~ 7 Success</strong>
+					</p>
+					<p>
+						-&gt;<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-addr">0006</span><span class="mb-reg-quantity">0002</span><span class="mb-crc">FE</span>
+					</p>
+					<p>
+						&lt;-<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-quantity">02</span><span class="mb-data">0356FE12</span><span class="mb-crc">FE</span>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<h1>Success 2 / Total 3</h1>
+		</div>
+		<!-- /footer -->
+	</div>
+
+	<div data-role="page" id="page-setting">
+		<div data-role="header">
+			<a href="#page-web-modbus" data-rel="back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
+			<h1>Setting</h1>
+		</div>
+		<div class="ui-content">
+			<label for="select-choice-baudrate" class="select">波特率：</label>
+			<select name="select-choice-baudrate" id="select-choice-baudrate" data-native-menu="false">
+				<option>波特率</option>
+				<option value="1200">1200</option>
+				<option value="2400">2400</option>
+				<option value="4800">4800</option>
+				<option value="9600" selected="selected">9600</option>
+				<option value="19200">19200</option>
+				<option value="38400">38400</option>
+				<option value="57600">57600</option>
+				<option value="115200">115200</option>
+			</select>
 		</div>
 	</div>
 </body>
