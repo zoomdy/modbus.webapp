@@ -10,67 +10,8 @@
 
 <script src="js/jquery-1.12.3.min.js"></script>
 <script src="js/jquery.mobile-1.4.5.min.js"></script>
+<script src="web-modbus.js"></script>
 
-<script type="text/javascript">
-	var xmlhttp;
-	function loadXMLDoc(url) {
-		xmlhttp = new XMLHttpRequest();
-
-		if (xmlhttp != null) {
-			xmlhttp.onreadystatechange = stateChange;
-			xmlhttp.open("GET", url, true);
-			xmlhttp.send(null);
-		} else {
-			alert("Your browser does not support XMLHTTP.");
-		}
-	}
-
-	function stateChange() {
-		if (xmlhttp.readyState == 4) {// 4 = "loaded"
-			if (xmlhttp.status == 200) {// 200 = "OK"
-				var hexResponse = xmlhttp.responseText;
-				var response = ''
-				for (i = 0; i < hexResponse.length - 1; i += 2) {
-					var charValue = String.fromCharCode('0x'
-							+ hexResponse.substring(i, i + 2))
-					response += charValue;
-				}
-				document.getElementById('receivedTextarea').value = response;
-			} else {
-				alert("Problem retrieving XML data:" + xmlhttp.statusText);
-			}
-		}
-	}
-
-	function send() {
-		var request = document.getElementById('sendTextarea').value;
-		var baudrate = document.getElementById('select-choice-baudrate').value;
-		var hexRequest = ''
-		for (i = 0; i < request.length; i++) {
-			var charCode = request.charCodeAt(i);
-			var hexCode = charCode.toString(16);
-			if (hexCode.length % 2 != 0) {
-				hexCode = '0' + hexCode;
-			}
-			hexRequest = hexRequest + hexCode;
-		}
-		var url = '/cgi-bin/web-serial?request=' + hexRequest + '&baudrate='
-				+ baudrate;
-		loadXMLDoc(url);
-	}
-
-	var running = 0;
-	function start() {
-		if (running == 0) {
-			document.getElementById("button-start").innerHTML = "停止";
-			running = 1;
-		} else {
-			document.getElementById("button-start").innerHTML = "开始";
-			running = 0;
-		}
-
-	}
-</script>
 <body>
 
 	<div data-role="page" id="page-web-modbus">
@@ -95,18 +36,18 @@
 			<label for="register-quantity">寄存器数目：</label>
 			<input name="number" pattern="[0-9]*" min="1" max="125" placeholder="寄存器数目(1~128)" id="register-quantity" value="" type="number"></input>
 
-			<a onclick="window.location.assign('#page-traffic');" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-arrow-r">开始</a>
+			<a id="btn-start" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-arrow-r">开始</a>
 		</div>
 	</div>
 
 	<div data-role="page" id="page-traffic">
 		<div data-role="header" data-position="fixed">
-			<a href="#page-web-modbus" data-rel="back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
+			<a id="btn-stop" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
 			<h1>Modbus Traffic</h1>
 		</div>
 		<!-- /header -->
 		<div class="ui-content">
-			<ul data-role="listview" data-inset="true">
+			<ul id="listview-traffic" data-role="listview" data-inset="true">
 				<li>
 					<p>
 						<strong>Read Input Registers 6 ~ 7 Success</strong>
@@ -155,7 +96,7 @@
 			</ul>
 		</div>
 		<div data-role="footer" data-position="fixed">
-			<h1>Success 2 / Total 3</h1>
+			<a id="add">Add</a><h1>Success 2 / Total 3</h1>
 		</div>
 		<!-- /footer -->
 	</div>
