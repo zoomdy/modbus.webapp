@@ -5,6 +5,8 @@ var registerAddress;
 var registerQuantity;
 var request;
 var modbusUrl;
+var countTotal = 0;
+var countSuccess = 0;
 
 var timer;
 
@@ -34,9 +36,16 @@ function successTraffic(data, status) {
 	$("#listview-traffic").listview('refresh');
 	window.scroll(0, 68835);
 
+	if (status == 'success' && data.length > 0) {
+		countSuccess++;
+	}
+	
+	$('#traffic-count').html('Success ' + countSuccess + ' / Total ' + countTotal);
+
 }
 
 function modbusTraffic() {
+	countTotal++;
 	$.get(modbusUrl, successTraffic);
 
 	// var content = '<li> \
