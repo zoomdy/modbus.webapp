@@ -4,14 +4,29 @@ var functionCode;
 var registerAddress;
 var registerQuantity;
 var request;
+var requestHTML;
 var modbusUrl;
 var countTotal = 0;
 var countSuccess = 0;
 
-var timer;
+var timer = null;
+var trafficAutoScroll = true;
 
 function successTraffic(data, status) {
-	var content = '<li><p><strong>';
+	var success;
+	if (status == 'success' && data.length >= 8 + registerQuantity * 4) {
+		success = true;
+	} else {
+		success = false;
+	}
+
+	var content;
+	if (success) {
+		content = '<li><p><strong>';
+	} else {
+		content = '<li data-theme="b"><p><strong>';
+	}
+
 	switch (functionCode) {
 	case '4':
 		content += 'Read Input Registers ';
@@ -27,20 +42,46 @@ function successTraffic(data, status) {
 	content += registerAddress + " ~ ";
 	content += Number(registerAddress) + Number(registerQuantity) - 1;
 
-	content += " " + status.toUpperCase() + '</strong></p>';
-	content += '<p>-&gt;' + request + '</p>';
-	content += '<p>&lt;-' + data + '</p>';
+	if (success) {
+		content += ' SUCCESS</strong></p>';
+	} else {
+		content += ' ERROR</strong></p>';
+	}
+
+	var responseHTML;
+	if (success) {
+		responseHTML = '<span class="mb-dev-addr">' + data.substring(0, 2)
+				+ '</span>';
+		responseHTML += '<span class="mb-func-code">' + data.substring(2, 4)
+				+ '</span>';
+		responseHTML += '<span class="mb-reg-quantity">' + data.substring(4, 6)
+				+ '</span>';
+		responseHTML += '<span class="mb-data">'
+				+ data.substring(6, 6 + registerQuantity * 4) + '</span>';
+		responseHTML += '<span class="mb-crc">'
+				+ data.substring(6 + registerQuantity * 4,
+						8 + registerQuantity * 4) + '</span>';
+	} else {
+		responseHTML = data;
+	}
+
+	content += '<p>-&gt;' + requestHTML + '</p>';
+	content += '<p>&lt;-' + responseHTML + '</p>';
 	content += '</li>';
 
 	$("#listview-traffic").append(content);
 	$("#listview-traffic").listview('refresh');
-	window.scroll(0, 68835);
 
-	if (status == 'success' && data.length > 0) {
+	if (trafficAutoScroll) {
+		window.scrollBy(0, window.innerHeight);
+	}
+
+	if (success) {
 		countSuccess++;
 	}
-	
-	$('#traffic-count').html('Success ' + countSuccess + ' / Total ' + countTotal);
+
+	$('#traffic-count').html(
+			'Success ' + countSuccess + ' / Total ' + countTotal);
 
 }
 
@@ -183,36 +224,58 @@ function modbusCRC16(data) {
 }
 
 function start() {
-	baudrate = $("#select-choice-baudrate").val();
-	deviceAddress = $("#device-address").val();
-	functionCode = $("#select-choice-function-code").val();
-	registerAddress = $("#register-address").val();
-	registerQuantity = $("#register-quantity").val();
+	if (timer == null) {
+		baudrate = $("#select-choice-baudrate").val();
+		deviceAddress = $("#device-address").val();
+		functionCode = $("#select-choice-function-code").val();
+		registerAddress = $("#register-address").val();
+		registerQuantity = $("#register-quantity").val();
 
-	request = new Array();
-	request[0] = Number(deviceAddress) & 0xff;
-	request[1] = Number(functionCode) & 0xff;
-	request[2] = (Number(registerAddress) >> 8) & 0xff;
-	request[3] = Number(registerAddress) & 0xff;
-	request[4] = (Number(registerQuantity) >> 8) & 0xff;
-	request[5] = Number(registerQuantity) & 0xff;
-	var crc16 = modbusCRC16(request);
-	request[6] = crc16 & 0xff;
-	request[7] = (crc16 >> 8) & 0xff;
+		request = new Array();
+		request[0] = Number(deviceAddress) & 0xff;
+		request[1] = Number(functionCode) & 0xff;
+		request[2] = (Number(registerAddress) >> 8) & 0xff;
+		request[3] = Number(registerAddress) & 0xff;
+		request[4] = (Number(registerQuantity) >> 8) & 0xff;
+		request[5] = Number(registerQuantity) & 0xff;
+		var crc16 = modbusCRC16(request);
+		request[6] = crc16 & 0xff;
+		request[7] = (crc16 >> 8) & 0xff;
 
-	request = byteArrayToHex(request);
+		request = byteArrayToHex(request);
+		request = request.toUpperCase();
+		requestHTML = '<span class="mb-dev-addr">' + request.substring(0, 2)
+				+ '</span>';
+		requestHTML += '<span class="mb-func-code">' + request.substring(2, 4)
+				+ '</span>';
+		requestHTML += '<span class="mb-reg-addr">' + request.substring(4, 8)
+				+ '</span>';
+		requestHTML += '<span class="mb-reg-quantity">'
+				+ request.substring(8, 12) + '</span>';
+		requestHTML += '<span class="mb-crc">' + request.substring(12, 14)
+				+ '</span>';
 
-	modbusUrl = '/cgi-bin/web-serial?request=' + request + '&baudrate='
-			+ baudrate;
+		modbusUrl = '/cgi-bin/web-serial?request=' + request + '&baudrate='
+				+ baudrate;
 
-	$.ajaxSetup({
-		timeout : 800
-	});
-	modbusTraffic();
+		$.ajaxSetup({
+			timeout : 800
+		});
+		modbusTraffic();
+	}
 }
 
 function stop() {
-	clearTimeout(timer);
+	if (timer != null) {
+		clearTimeout(timer);
+		timer = null;
+	}
+}
+
+function clear() {
+	$("#listview-traffic").html("");
+	countTotal = 0;
+	countSuccess = 0;
 }
 
 $(document).ready(function() {
@@ -224,6 +287,25 @@ $(document).ready(function() {
 	$("#btn-back").click(function() {
 		stop();
 		location.assign('#page-web-modbus');
+	});
+
+	$("#traffic-start").click(function() {
+		start();
+	});
+
+	$("#traffic-stop").click(function() {
+		stop();
+	});
+
+	$("#traffic-auto-scroll").click(function() {
+		trafficAutoScroll = !trafficAutoScroll;
+		if (trafficAutoScroll) {
+			window.scrollBy(0, Number.POSITIVE_INFINITY);
+		}
+	});
+
+	$("#traffic-clear").click(function() {
+		clear();
 	});
 
 });

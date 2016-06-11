@@ -1,5 +1,5 @@
 .mb-dev-addr {
-	color: #f60;
+	color: #090;
 }
 
 .mb-func-code {
@@ -7,7 +7,7 @@
 }
 
 .mb-reg-addr {
-	color: #0ff;
+	color: #090;
 }
 
 .mb-reg-quantity {
@@ -24,4 +24,8 @@
 
 .mb-success {
 	color: #0f0;
+}
+
+.mb-data-err {
+	color : #fff;
 }

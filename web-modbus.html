@@ -11,7 +11,6 @@
 <script src="js/jquery-1.12.3.min.js"></script>
 <script src="js/jquery.mobile-1.4.5.min.js"></script>
 <script src="web-modbus.js"></script>
-
 <body>
 
 	<div data-role="page" id="page-web-modbus">
@@ -36,7 +35,7 @@
 			<label for="register-quantity">寄存器数目：</label>
 			<input name="number" pattern="[0-9]*" min="1" max="125" placeholder="寄存器数目(1~128)" id="register-quantity" value="8" type="number"></input>
 
-			<a id="btn-start" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-arrow-r">开始</a>
+			<a id="btn-start" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-carat-r">开始</a>
 		</div>
 	</div>
 
@@ -48,55 +47,19 @@
 		<!-- /header -->
 		<div class="ui-content">
 			<ul id="listview-traffic" data-role="listview" data-inset="true">
-				<li>
-					<p>
-						<strong>Read Input Registers 6 ~ 7 Success</strong>
-					</p>
-					<p>
-						-&gt;<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-addr">0006</span><span class="mb-reg-quantity">0002</span><span class="mb-crc">FE</span>
-					</p>
-					<p>
-						&lt;-<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-quantity">02</span><span class="mb-data">0356FE12</span><span class="mb-crc">FE</span>
-					</p>
-				</li>
-				<li data-theme="b">
-					<p>
-						<strong>Read Input Registers 6 ~ 7 Error</strong>
-					</p>
-					<p>
-						-&gt;<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-addr">0006</span><span class="mb-reg-quantity">0002</span><span class="mb-crc">FE</span>
-					</p>
-					<p>
-						&lt;-<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-quantity">02</span><span class="mb-data">0356FE12</span><span class="mb-crc">FE</span>
-					</p>
-				</li>
-
-				<li>
-					<p>
-						<strong>Read Input Registers 6 ~ 7 Success</strong>
-					</p>
-					<p>
-						-&gt;<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-addr">0006</span><span class="mb-reg-quantity">0002</span><span class="mb-crc">FE</span>
-					</p>
-					<p>
-						&lt;-<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-quantity">02</span><span class="mb-data">0356FE12</span><span class="mb-crc">FE</span>
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Read Input Registers 6 ~ 7 Success</strong>
-					</p>
-					<p>
-						-&gt;<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-addr">0006</span><span class="mb-reg-quantity">0002</span><span class="mb-crc">FE</span>
-					</p>
-					<p>
-						&lt;-<span class="mb-dev-addr">08</span><span class="mb-func-code">03</span><span class="mb-reg-quantity">02</span><span class="mb-data">0356FE12</span><span class="mb-crc">FE</span>
-					</p>
-				</li>
 			</ul>
 		</div>
 		<div data-role="footer" data-position="fixed">
-			<h1 id="traffic-count">Success 2 / Total 3</h1>
+			<h1 id="traffic-count">Success 0 / Total 0</h1>
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#" id="traffic-start" data-icon="refresh" class="ui-btn-active">Start</a></li>
+					<li><a href="#" id="traffic-stop" data-icon="delete">Stop</a></li>
+					<li><a href="#" id="traffic-auto-scroll" data-icon="gear">Auto Scroll</a></li>
+					<li><a href="#" id="traffic-clear" data-icon="recycle">Clear</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
 		</div>
 		<!-- /footer -->
 	</div>
