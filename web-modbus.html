@@ -21,7 +21,7 @@
 		</div>
 		<div class="ui-content">
 			<label for="device-address">设备地址：</label>
-			<input name="number" pattern="[0-9]*" min="0" max="247" placeholder="设备地址(0~247)" id="device-address" value="" type="number"></input>
+			<input name="number" pattern="[0-9]*" min="0" max="247" placeholder="设备地址(0~247)" id="device-address" value="18" type="number"></input>
 
 			<label for="select-choice-function-code" class="select">功能码：</label>
 			<select name="select-choice-function-code" id="select-choice-function-code" data-native-menu="false">
@@ -31,10 +31,10 @@
 			</select>
 
 			<label for="register-address">寄存器起始地址：</label>
-			<input name="number" pattern="[0-9]*" min="0" max="65535" placeholder="寄存器起始地址(0~65535)" id="register-address" value="" type="number"></input>
+			<input name="number" pattern="[0-9]*" min="0" max="65535" placeholder="寄存器起始地址(0~65535)" id="register-address" value="30000" type="number"></input>
 
 			<label for="register-quantity">寄存器数目：</label>
-			<input name="number" pattern="[0-9]*" min="1" max="125" placeholder="寄存器数目(1~128)" id="register-quantity" value="" type="number"></input>
+			<input name="number" pattern="[0-9]*" min="1" max="125" placeholder="寄存器数目(1~128)" id="register-quantity" value="8" type="number"></input>
 
 			<a id="btn-start" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-arrow-r">开始</a>
 		</div>
@@ -42,7 +42,7 @@
 
 	<div data-role="page" id="page-traffic">
 		<div data-role="header" data-position="fixed">
-			<a id="btn-stop" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
+			<a id="btn-back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
 			<h1>Modbus Traffic</h1>
 		</div>
 		<!-- /header -->
@@ -96,7 +96,7 @@
 			</ul>
 		</div>
 		<div data-role="footer" data-position="fixed">
-			<a id="add">Add</a><h1>Success 2 / Total 3</h1>
+			<h1>Success 2 / Total 3</h1>
 		</div>
 		<!-- /footer -->
 	</div>
