@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Web Modbus</title>
-<link rel="shortcut icon" href="favicon.ico">
+<title>Modbus/HTTP</title>
+<link rel="shortcut icon" href="images/favicon.ico">
 <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.min.css">
 <link rel="stylesheet" href="css/modbus.css">
 
@@ -13,12 +13,18 @@
 <script src="js/modbus.js"></script>
 <body>
 
-	<div data-role="page" id="page-web-modbus">
+	<div data-role="page" id="page-setting">
 		<div data-role="header">
-			<a href="#page-setting" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-gear">Setting</a>
-			<h1>Web Modbus</h1>
+			<h1>Modbus/HTTP</h1>
 		</div>
 		<div class="ui-content">
+
+			<label for="host">主机：</label>
+			<input placeholder="主机地址（域名或IP）" id="host" value="192.168.3.46" type="text"></input>
+
+			<label for="port">端口：</label>
+			<input pattern="[0-9]*" placeholder="端口（默认为80）" min="1" max="65535" id="port" value="80" type="number"></input>
+
 			<label for="device-address">设备地址：</label>
 			<input name="number" pattern="[0-9]*" min="0" max="247" placeholder="设备地址(0~247)" id="device-address" value="18" type="number"></input>
 
@@ -64,26 +70,6 @@
 		<!-- /footer -->
 	</div>
 
-	<div data-role="page" id="page-setting">
-		<div data-role="header">
-			<a href="#page-web-modbus" data-rel="back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
-			<h1>Setting</h1>
-		</div>
-		<div class="ui-content">
-			<label for="select-choice-baudrate" class="select">波特率：</label>
-			<select name="select-choice-baudrate" id="select-choice-baudrate" data-native-menu="false">
-				<option>波特率</option>
-				<option value="1200">1200</option>
-				<option value="2400">2400</option>
-				<option value="4800">4800</option>
-				<option value="9600" selected="selected">9600</option>
-				<option value="19200">19200</option>
-				<option value="38400">38400</option>
-				<option value="57600">57600</option>
-				<option value="115200">115200</option>
-			</select>
-		</div>
-	</div>
 </body>
 
 </head>
