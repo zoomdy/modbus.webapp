@@ -1,0 +1,31 @@
+.mb-dev-addr {
+	color: #090;
+}
+
+.mb-func-code {
+	color: #f00;
+}
+
+.mb-reg-addr {
+	color: #090;
+}
+
+.mb-reg-quantity {
+	color: #00f;
+}
+
+.mb-data {
+	color: #000;
+}
+
+.mb-crc {
+	color: #f00;
+}
+
+.mb-success {
+	color: #0f0;
+}
+
+.mb-data-err {
+	color : #fff;
+}
