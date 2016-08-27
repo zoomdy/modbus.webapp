@@ -20,6 +20,8 @@ function addTraffic(success, data, msg) {
 	} else {
 		content = '<li data-theme="b"><p><strong>';
 	}
+    
+    content += 'No. ' + countTotal + ' ';
 
 	switch (functionCode) {
 	case '4':
