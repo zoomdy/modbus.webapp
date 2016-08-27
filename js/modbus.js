@@ -1,4 +1,5 @@
-var baudrate;
+var host;
+var port;
 var deviceAddress;
 var functionCode;
 var registerAddress;
@@ -60,7 +61,7 @@ function successTraffic(data, status) {
 				+ data.substring(6, 6 + registerQuantity * 4) + '</span>';
 		responseHTML += '<span class="mb-crc">'
 				+ data.substring(6 + registerQuantity * 4,
-						8 + registerQuantity * 4) + '</span>';
+						10 + registerQuantity * 4) + '</span>';
 	} else {
 		responseHTML = data;
 	}
@@ -225,7 +226,8 @@ function modbusCRC16(data) {
 
 function start() {
 	if (timer == null) {
-		baudrate = $("#select-choice-baudrate").val();
+		host = $("#host").val();
+		port = $("#port").val();
 		deviceAddress = $("#device-address").val();
 		functionCode = $("#select-choice-function-code").val();
 		registerAddress = $("#register-address").val();
@@ -252,11 +254,10 @@ function start() {
 				+ '</span>';
 		requestHTML += '<span class="mb-reg-quantity">'
 				+ request.substring(8, 12) + '</span>';
-		requestHTML += '<span class="mb-crc">' + request.substring(12, 14)
+		requestHTML += '<span class="mb-crc">' + request.substring(12, 16)
 				+ '</span>';
 
-		modbusUrl = '/cgi-bin/web-serial?request=' + request + '&baudrate='
-				+ baudrate;
+		modbusUrl = 'http://' + host + ':' + port + '/modbus?request=' + request;
 
 		$.ajaxSetup({
 			timeout : 800
@@ -286,7 +287,7 @@ $(document).ready(function() {
 
 	$("#btn-back").click(function() {
 		stop();
-		location.assign('#page-web-modbus');
+		location.assign('#page-setting');
 	});
 
 	$("#traffic-start").click(function() {
