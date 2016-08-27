@@ -279,6 +279,8 @@ function clear() {
 	$("#listview-traffic").html("");
 	countTotal = 0;
 	countSuccess = 0;
+    $('#traffic-count').html(
+        'Success ' + countSuccess + ' / Total ' + countTotal);
 }
 
 $(document).ready(function() {
