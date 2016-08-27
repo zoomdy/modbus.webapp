@@ -4,6 +4,8 @@ var deviceAddress;
 var functionCode;
 var registerAddress;
 var registerQuantity;
+var dataQuantity;
+var displayType;
 var request;
 var requestHTML;
 var modbusUrl;
@@ -12,6 +14,7 @@ var countSuccess = 0;
 
 var timer = null;
 var trafficAutoScroll = true;
+var addData = null;
 
 function addTraffic(success, data, msg) {
 	var content;
@@ -78,16 +81,57 @@ function addTraffic(success, data, msg) {
 
 }
 
+function addDataInt16(data) {
+    var i;
+    var listview = $('#listview-data');
+    listview.empty();
+    for(i = 0; i < dataQuantity; i++){
+        var n = parseInt(data.substring(6 + i * 4, 10 + i * 4), 16);
+        listview.append('<li>' + n + '</li>');
+    }
+    listview.listview('refresh');
+}
+
+function addDataInt32(data) {
+    var i;
+    var listview = $('#listview-data');
+    listview.empty();
+    for(i = 0; i < dataQuantity; i++){
+        var n = parseInt(data.substring(6 + i * 8, 14 + i * 8), 16);
+        listview.append('<li>' + n + '</li>');
+    }
+    listview.listview('refresh');
+}
+
+function addDataFloat(data) {
+    var i;
+    var listview = $('#listview-data');
+    listview.empty();
+    for(i = 0; i < dataQuantity; i++){
+        var n = parseInt(data.substring(6 + i * 8, 14 + i * 8), 16);
+        listview.append('<li>' + n + 'FIXME</li>');
+    }
+    listview.listview('refresh');
+}
+
 function successTraffic(data, status) {
-	if (status == 'success' && data.length >= 8 + registerQuantity * 4) {
-		addTraffic(true, data, 'SUCCESS');
-	} else {
-		addTraffic(false, data, 'INVALID RESPONSE');
-	}
+    if(displayType == "traffic") {
+        if (status == 'success' && data.length >= 8 + registerQuantity * 4) {
+            addTraffic(true, data, 'SUCCESS');
+        } else {
+            addTraffic(false, data, 'INVALID RESPONSE');
+        }
+    } else {
+        addData(data);
+    }
 }
 
 function errorTraffic(xhr, msg, err) {
-    addTraffic(false, '', msg.toUpperCase());
+    if(displayType == "traffic") {
+        addTraffic(false, '', msg.toUpperCase());
+    } else {
+        
+    }
 }
 
 function modbusTraffic() {
@@ -262,6 +306,38 @@ function start() {
 				+ '</span>';
 
 		modbusUrl = 'http://' + host + ':' + port + '/modbus?request=' + request;
+        
+        switch(displayType) {
+            case "data-int-16":
+                dataQuantity = Number(registerQuantity);
+                addData = addDataInt16;
+                break;
+            case "data-int-32":
+                dataQuantity = Number(registerQuantity) / 2;
+                addData = addDataInt32;
+                break;
+            case "data-float":
+                dataQuantity = Number(registerQuantity) / 2;
+                addData = addDataFloat;
+                break;
+            default:
+                dataQuantity = 0;
+                
+        }
+        
+        var i;
+        var listview = $('#listview-data');
+        listview.empty();
+        for(i = 0; i < dataQuantity; i++) {
+            listview.append('<li>0</li>');
+        }
+        
+        if(displayType != 'traffic') {
+            setTimeout(function(){
+                $('#listview-data').listview('refresh');
+            }, 100);
+        }
+        
 
 		$.ajaxSetup({
 			timeout : 800
@@ -287,14 +363,21 @@ function clear() {
 
 $(document).ready(function() {
 	$("#btn-start").click(function() {
-		location.assign('#page-traffic');
+        displayType = $("#select-choice-display-type").val();
+        if(displayType == "traffic") {
+		  location.assign('#page-traffic');
+        } else {
+            location.assign('#page-data');
+        }
 		start();
 	});
 
-	$("#btn-back").click(function() {
-		stop();
-		location.assign('#page-setting');
-	});
+    function back(){
+ 		stop();
+		location.assign('#page-setting');       
+    }
+	$("#btn-back").click(back);
+    $("#page-data-btn-back").click(back);
 
 	$("#traffic-start").click(function() {
 		start();

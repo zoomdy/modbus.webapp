@@ -41,6 +41,15 @@
 			<label for="register-quantity">寄存器数目：</label>
 			<input name="number" pattern="[0-9]*" min="1" max="125" placeholder="寄存器数目(1~128)" id="register-quantity" value="8" type="number"></input>
 
+            <label for="select-choice-display-type" class="select">显示类型：</label>
+			<select name="select-choice-display-type" id="select-choice-display-type" data-native-menu="false">
+				<option>显示类型</option>
+				<option value="traffic" selected="selected">Show Traffic</option>
+				<option value="data-int-16">Show Integer (16bits)</option>
+                <option value="data-int-32">Show Integer (32bits)</option>
+                <option value="data-float">Show Float (32bits)</option>
+			</select>
+
 			<a id="btn-start" class="ui-btn ui-corner-all ui-btn-icon-right ui-icon-carat-r">开始</a>
 		</div>
 	</div>
@@ -68,6 +77,18 @@
 			<!-- /navbar -->
 		</div>
 		<!-- /footer -->
+	</div>
+
+	<div data-role="page" id="page-data">
+		<div data-role="header" data-position="fixed">
+			<a id="page-data-btn-back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
+			<h1>Modbus Data</h1>
+		</div>
+		<!-- /header -->
+		<div class="ui-content">
+            <ul id="listview-data" data-role="listview">
+            </ul>
+		</div>
 	</div>
 
 </body>
