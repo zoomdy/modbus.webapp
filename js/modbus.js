@@ -13,14 +13,7 @@ var countSuccess = 0;
 var timer = null;
 var trafficAutoScroll = true;
 
-function successTraffic(data, status) {
-	var success;
-	if (status == 'success' && data.length >= 8 + registerQuantity * 4) {
-		success = true;
-	} else {
-		success = false;
-	}
-
+function addTraffic(success, data, msg) {
 	var content;
 	if (success) {
 		content = '<li><p><strong>';
@@ -42,12 +35,7 @@ function successTraffic(data, status) {
 
 	content += registerAddress + " ~ ";
 	content += Number(registerAddress) + Number(registerQuantity) - 1;
-
-	if (success) {
-		content += ' SUCCESS</strong></p>';
-	} else {
-		content += ' ERROR</strong></p>';
-	}
+    content += ' ' + msg + '</strong></p>';
 
 	var responseHTML;
 	if (success) {
@@ -86,9 +74,21 @@ function successTraffic(data, status) {
 
 }
 
+function successTraffic(data, status) {
+	if (status == 'success' && data.length >= 8 + registerQuantity * 4) {
+		addTraffic(true, data, 'SUCCESS');
+	} else {
+		addTraffic(false, data, 'INVALID RESPONSE');
+	}
+}
+
+function errorTraffic(xhr, msg, err) {
+    addTraffic(false, '', msg.toUpperCase());
+}
+
 function modbusTraffic() {
 	countTotal++;
-	$.get(modbusUrl, successTraffic);
+	$.ajax({ url: modbusUrl, success: successTraffic, error: errorTraffic});
 
 	// var content = '<li> \
 	// <p> \
