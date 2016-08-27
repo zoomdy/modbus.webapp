@@ -15,10 +15,12 @@ var trafficAutoScroll = true;
 
 function addTraffic(success, data, msg) {
 	var content;
+    
+    var content = '<li id="traffic-no-' + countTotal +'"';
 	if (success) {
-		content = '<li><p><strong>';
+		content += '><p><strong>';
 	} else {
-		content = '<li data-theme="b"><p><strong>';
+		content += ' data-theme="b"><p><strong>';
 	}
     
     content += 'No. ' + countTotal + ' ';
@@ -276,7 +278,7 @@ function stop() {
 }
 
 function clear() {
-	$("#listview-traffic").html("");
+	$("#listview-traffic").empty();
 	countTotal = 0;
 	countSuccess = 0;
     $('#traffic-count').html(
