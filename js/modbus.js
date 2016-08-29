@@ -97,19 +97,31 @@ function addDataInt32(data) {
     var listview = $('#listview-data');
     listview.empty();
     for(i = 0; i < dataQuantity; i++){
-        var n = parseInt(data.substring(6 + i * 8, 14 + i * 8), 16);
+        var hex = data.substring(10 + i * 8, 14 + i * 8);
+        hex += data.substring(6 + i * 8, 10 + i * 8)
+        var n = parseInt(hex, 16);
         listview.append('<li>' + n + '</li>');
     }
     listview.listview('refresh');
 }
 
+function hex2bin(s){
+    for(var i = 0, l = s.length, r = ""; i < l; r += String.fromCharCode(parseInt(s.substr(i, 2), 16)), i += 2);
+    return r;
+}
+
 function addDataFloat(data) {
+    var binaryParser = new BinaryParser(true);
     var i;
     var listview = $('#listview-data');
     listview.empty();
     for(i = 0; i < dataQuantity; i++){
-        var n = parseInt(data.substring(6 + i * 8, 14 + i * 8), 16);
-        listview.append('<li>' + n + 'FIXME</li>');
+        var hex = data.substring(10 + i * 8, 14 + i * 8);
+        hex += data.substring(6 + i * 8, 10 + i * 8)
+        var n = parseInt(hex, 16);
+        var str = hex2bin(hex);
+        var f = binaryParser.toFloat(str);
+        listview.append('<li>' + f.toFixed(4) + '</li>');
     }
     listview.listview('refresh');
 }
